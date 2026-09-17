@@ -41,7 +41,7 @@ export default function TopicReading({ lang, topic, onStartQuiz, isRetake }) {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="max-h-[60vh] overflow-y-auto rounded-xl border border-border bg-card p-6 shadow-sm"
+        className="max-h-[60vh] overflow-y-auto rounded-sm border border-border bg-card p-6 shadow-sm"
       >
         <div className="flex items-center gap-2 text-brand-hover">
           <BookOpen size={20} />
@@ -70,7 +70,7 @@ export default function TopicReading({ lang, topic, onStartQuiz, isRetake }) {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">{t("keyDefinitions")}</h2>
           <dl className="mt-2 space-y-2">
             {topic.definitions.map((d, i) => (
-              <div key={i} className="rounded-lg border-s-4 border-brand bg-brand/5 px-3 py-2">
+              <div key={i} className="rounded-sm border-s-4 border-brand bg-brand/5 px-3 py-2">
                 <dt className="font-semibold text-foreground">{toText(d.term)}</dt>
                 <dd className="text-foreground">{toText(d.definition)}</dd>
               </div>
@@ -96,7 +96,7 @@ export default function TopicReading({ lang, topic, onStartQuiz, isRetake }) {
               {topic.scenarios.map((s, i) => (
                 <p
                   key={i}
-                  className="rounded-lg border border-accent-soft-border bg-accent-soft-bg px-3 py-2.5 text-foreground"
+                  className="rounded-sm border border-accent-soft-border bg-accent-soft-bg px-3 py-2.5 text-foreground"
                 >
                   {toText(s)}
                 </p>
@@ -144,8 +144,8 @@ export default function TopicReading({ lang, topic, onStartQuiz, isRetake }) {
           onClick={onStartQuiz}
           className={
             canStartQuiz
-              ? "cursor-pointer whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 font-medium text-white transition-colors duration-200 hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              : "cursor-not-allowed whitespace-nowrap rounded-lg bg-accent/40 px-5 py-2.5 font-medium text-white"
+              ? "cursor-pointer whitespace-nowrap rounded-sm bg-accent px-5 py-2.5 font-medium text-accent-on transition-colors duration-200 hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              : "cursor-not-allowed whitespace-nowrap rounded-sm bg-accent/40 px-5 py-2.5 font-medium text-accent-on"
           }
         >
           {isRetake ? t("takeNewQuiz") : t("startQuiz")}

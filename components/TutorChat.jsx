@@ -102,7 +102,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
   return (
     <div className="fixed bottom-5 end-5 z-50">
       {open && (
-        <div className="mb-3 flex h-[28rem] w-80 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-lg sm:w-96">
+        <div className="mb-3 flex h-[28rem] w-80 flex-col overflow-hidden rounded-sm border border-border bg-card shadow-lg sm:w-96">
           <div className="flex items-center justify-between bg-brand-dark px-4 py-3">
             <div className="flex items-center gap-2 text-white">
               <GraduationCap size={16} />
@@ -120,7 +120,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
 
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-3">
             {mode === "demo" && (
-              <div className="rounded-lg border border-warning-border bg-warning-bg p-2.5 text-xs text-warning">
+              <div className="rounded-sm border border-warning-border bg-warning-bg p-2.5 text-xs text-warning">
                 {t("tutorDemoNotice")}
               </div>
             )}
@@ -130,8 +130,8 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
                 <div
                   className={
                     m.role === "user"
-                      ? "max-w-[85%] rounded-lg bg-accent px-3 py-2 text-sm text-white"
-                      : "max-w-[85%] rounded-lg bg-brand/10 px-3 py-2 text-sm text-foreground"
+                      ? "max-w-[85%] rounded-sm bg-accent px-3 py-2 text-sm text-accent-on"
+                      : "max-w-[85%] rounded-sm bg-brand/10 px-3 py-2 text-sm text-foreground"
                   }
                 >
                   {m.text || (isStreaming && i === messages.length - 1 ? "…" : "")}
@@ -147,7 +147,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
                   key={key}
                   type="button"
                   onClick={() => sendMessage(t(key))}
-                  className="cursor-pointer rounded-full border border-brand/30 bg-brand/5 px-2.5 py-1 text-xs text-brand-hover transition-colors duration-200 hover:bg-brand/10"
+                  className="cursor-pointer rounded-sm border border-brand/30 bg-brand/5 px-2.5 py-1 text-xs text-brand-hover transition-colors duration-200 hover:bg-brand/10"
                 >
                   {t(key)}
                 </button>
@@ -168,12 +168,12 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
               onChange={(e) => setInput(e.target.value)}
               disabled={mode === "demo" || isStreaming}
               placeholder={t("tutorPlaceholder")}
-              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand disabled:opacity-50"
+              className="flex-1 rounded-sm border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={mode === "demo" || isStreaming || !input.trim()}
-              className="cursor-pointer rounded-lg bg-accent p-2 text-white transition-colors duration-200 hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
+              className="cursor-pointer rounded-sm bg-accent p-2 text-accent-on transition-colors duration-200 hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Send"
             >
               <Send size={16} />
@@ -186,7 +186,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close AI HR Tutor" : "Open AI HR Tutor"}
-        className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-accent text-white shadow-lg transition-colors duration-200 hover:bg-accent-hover"
+        className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-2 border-accent-on/20 bg-accent text-accent-on shadow-lg transition-colors duration-200 hover:bg-accent-hover"
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}
       </button>

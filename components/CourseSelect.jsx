@@ -23,7 +23,7 @@ export default function CourseSelect({ lang, level, onSelect, onChangeLevel }) {
         <button
           type="button"
           onClick={onChangeLevel}
-          className="cursor-pointer whitespace-nowrap rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-muted shadow-sm transition-colors duration-200 hover:border-brand hover:text-brand-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="cursor-pointer whitespace-nowrap rounded-sm border border-border bg-card px-3 py-1.5 text-sm text-muted shadow-sm transition-colors duration-200 hover:border-brand hover:text-brand-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           {t("levelLabel", { value: levelName })}
         </button>
@@ -38,7 +38,7 @@ export default function CourseSelect({ lang, level, onSelect, onChangeLevel }) {
               key={course.id}
               type="button"
               onClick={() => onSelect(course.id)}
-              className="cursor-pointer rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="cursor-pointer rounded-sm border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="font-heading text-base font-semibold text-foreground">

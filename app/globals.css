@@ -1,32 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f0fdfa;
-  --foreground: #134e4a;
-  --muted: #3f6b66;
-  --border: #99f6e4;
-  --card: #ffffff;
+  --background: #eeead9;
+  --foreground: #23271b;
+  --muted: #5c5f47;
+  --border: #c7c2a0;
+  --card: #f8f6ec;
 
-  --brand: #0d9488;
-  --brand-dark: #115e59;
-  --brand-hover: #0f766e;
+  --brand: #4a5d23;
+  --brand-dark: #2e3a15;
+  --brand-hover: #3d4d1c;
 
-  --accent: #c2410c;
-  --accent-hover: #9a3412;
-  --accent-soft-bg: #ffedd5;
-  --accent-soft-border: #fed7aa;
+  --accent: #ff6b00;
+  --accent-on: #1a1d14;
+  --accent-text: #b34700;
+  --accent-hover: #e65c00;
+  --accent-soft-bg: #fbe4cc;
+  --accent-soft-border: #e3ab6e;
 
-  --success: #16a34a;
-  --success-bg: #f0fdf4;
-  --success-border: #bbf7d0;
+  --success: #1f7a3d;
+  --success-bg: #dff3e4;
+  --success-border: #a8dab8;
 
-  --danger: #dc2626;
-  --danger-bg: #fef2f2;
-  --danger-border: #fecaca;
+  --danger: #b3261e;
+  --danger-bg: #fbe2e0;
+  --danger-border: #eeb3ae;
 
-  --warning: #d97706;
-  --warning-bg: #fffbeb;
-  --warning-border: #fde68a;
+  --warning: #8a5a06;
+  --warning-bg: #fdf0d0;
+  --warning-border: #e8cd8a;
 }
 
 @theme inline {
@@ -39,6 +41,8 @@
   --color-brand-dark: var(--brand-dark);
   --color-brand-hover: var(--brand-hover);
   --color-accent: var(--accent);
+  --color-accent-on: var(--accent-on);
+  --color-accent-text: var(--accent-text);
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft-bg: var(--accent-soft-bg);
   --color-accent-soft-border: var(--accent-soft-border);
@@ -58,12 +62,15 @@
 
 body {
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  background-image: linear-gradient(180deg, #ffffff 0%, var(--background) 420px);
+  background-image:
+    repeating-linear-gradient(135deg, rgba(74, 93, 35, 0.05) 0px, rgba(74, 93, 35, 0.05) 2px, transparent 2px, transparent 14px),
+    linear-gradient(180deg, #e2ddc0 0%, var(--background) 420px);
   background-attachment: fixed;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.01em;
 }
 
 [dir="rtl"] body,
@@ -76,6 +83,12 @@ h1, h2, h3, h4 {
 [dir="rtl"] h3,
 [dir="rtl"] h4 {
   font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: normal;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-on);
 }
 
 @media (prefers-reduced-motion: reduce) {

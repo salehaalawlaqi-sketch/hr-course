@@ -6,10 +6,10 @@ import { translate } from "@/lib/i18n";
 import { toText } from "@/lib/safeText";
 
 const TYPE_META = {
-  mcq: { labelKey: "typeMcq", icon: ListChecks, classes: "bg-teal-100 text-teal-800" },
-  true_false: { labelKey: "typeTrueFalse", icon: ToggleLeft, classes: "bg-sky-100 text-sky-800" },
-  scenario: { labelKey: "typeScenario", icon: Drama, classes: "bg-violet-100 text-violet-800" },
-  sjt: { labelKey: "typeSjt", icon: Compass, classes: "bg-orange-100 text-orange-800" },
+  mcq: { labelKey: "typeMcq", icon: ListChecks, classes: "bg-lime-100 text-lime-800 border border-lime-300" },
+  true_false: { labelKey: "typeTrueFalse", icon: ToggleLeft, classes: "bg-slate-100 text-slate-700 border border-slate-300" },
+  scenario: { labelKey: "typeScenario", icon: Drama, classes: "bg-amber-100 text-amber-800 border border-amber-300" },
+  sjt: { labelKey: "typeSjt", icon: Compass, classes: "bg-orange-100 text-orange-800 border border-orange-300" },
 };
 
 export default function Quiz({ lang, questions, onSubmit }) {
@@ -42,17 +42,17 @@ export default function Quiz({ lang, questions, onSubmit }) {
     <div className="mx-auto max-w-2xl">
       <div className="mb-4">
         <div className="text-sm text-muted">{t("questionOf", { current: index + 1, total: questions.length })}</div>
-        <div className="mt-1 h-1.5 rounded-full bg-border">
+        <div className="mt-1 h-1.5 rounded-sm bg-border">
           <div
-            className="h-full rounded-full bg-brand transition-all duration-200"
+            className="h-full rounded-sm bg-brand transition-all duration-200"
             style={{ width: `${((index + (selected !== undefined ? 1 : 0)) / questions.length) * 100}%` }}
           />
         </div>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-sm border border-border bg-card p-6 shadow-sm">
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold ${typeMeta.classes}`}
+          className={`inline-flex items-center gap-1.5 rounded-sm px-2.5 py-0.5 text-xs font-semibold ${typeMeta.classes}`}
         >
           <TypeIcon size={13} /> {t(typeMeta.labelKey)}
         </span>
@@ -68,8 +68,8 @@ export default function Quiz({ lang, questions, onSubmit }) {
                 onClick={() => selectChoice(i)}
                 className={
                   isSelected
-                    ? "cursor-pointer rounded-lg border-2 border-brand bg-brand/5 p-3 text-left text-foreground transition-colors duration-200"
-                    : "cursor-pointer rounded-lg border border-border bg-card p-3 text-left text-foreground transition-colors duration-200 hover:border-brand/50 hover:bg-brand/5"
+                    ? "cursor-pointer rounded-sm border-2 border-brand bg-brand/5 p-3 text-left text-foreground transition-colors duration-200"
+                    : "cursor-pointer rounded-sm border border-border bg-card p-3 text-left text-foreground transition-colors duration-200 hover:border-brand/50 hover:bg-brand/5"
                 }
               >
                 <span className={`me-2 font-semibold ${isSelected ? "text-brand-hover" : "text-muted"}`}>
@@ -89,8 +89,8 @@ export default function Quiz({ lang, questions, onSubmit }) {
           onClick={() => setIndex((i) => i - 1)}
           className={
             index === 0
-              ? "invisible flex items-center gap-1 rounded-lg px-4 py-2 text-sm"
-              : "cursor-pointer flex items-center gap-1 rounded-lg border border-border px-4 py-2 text-sm text-muted transition-colors duration-200 hover:border-brand hover:text-brand-hover"
+              ? "invisible flex items-center gap-1 rounded-sm px-4 py-2 text-sm"
+              : "cursor-pointer flex items-center gap-1 rounded-sm border border-border px-4 py-2 text-sm text-muted transition-colors duration-200 hover:border-brand hover:text-brand-hover"
           }
         >
           <BackChevron size={16} /> {t("previous")}
@@ -101,8 +101,8 @@ export default function Quiz({ lang, questions, onSubmit }) {
           onClick={goNext}
           className={
             selected !== undefined
-              ? "cursor-pointer flex items-center gap-1 rounded-lg bg-accent px-5 py-2.5 font-medium text-white shadow-sm transition-colors duration-200 hover:bg-accent-hover"
-              : "cursor-not-allowed flex items-center gap-1 rounded-lg bg-accent/40 px-5 py-2.5 font-medium text-white"
+              ? "cursor-pointer flex items-center gap-1 rounded-sm bg-accent px-5 py-2.5 font-medium text-accent-on shadow-sm transition-colors duration-200 hover:bg-accent-hover"
+              : "cursor-not-allowed flex items-center gap-1 rounded-sm bg-accent/40 px-5 py-2.5 font-medium text-accent-on"
           }
         >
           {isLast ? t("submitQuiz") : t("next")} <ForwardChevron size={16} />

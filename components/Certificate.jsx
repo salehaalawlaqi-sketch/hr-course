@@ -13,38 +13,40 @@ export default function Certificate({ lang, course, learnerName, onClose }) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 print:static print:bg-transparent print:p-0">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 print:static print:bg-transparent print:p-0">
       <div className="w-full max-w-2xl">
         <div className="mb-3 flex justify-end gap-2 print:hidden">
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors duration-200 hover:bg-accent-hover"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm bg-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-accent-on shadow-sm transition-colors duration-200 hover:bg-accent-hover"
           >
             <Printer size={15} /> {t("certificatePrint")}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/60 bg-white px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors duration-200 hover:bg-background"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border border-border bg-card px-4 py-2 text-sm font-bold uppercase tracking-wide text-foreground shadow-sm transition-colors duration-200 hover:border-brand"
           >
             <X size={15} /> {t("certificateClose")}
           </button>
         </div>
 
-        <div className="rounded-2xl border-8 border-brand bg-card p-10 text-center shadow-lg">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/10">
-            <GraduationCap size={28} className="text-brand" />
+        <div className="rounded-sm border-4 border-brand bg-card p-10 text-center shadow-lg print:border-2 print:border-black print:bg-white">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border-2 border-brand bg-brand/10 print:border-black print:bg-transparent">
+            <GraduationCap size={28} className="text-brand print:text-black" />
           </div>
-          <h1 className="mt-4 font-heading text-2xl font-bold text-brand-dark">{t("certificateTitle")}</h1>
-          <p className="mt-6 text-sm text-muted">{t("certificateIntro")}</p>
-          <p className="mt-2 font-heading text-3xl font-bold text-foreground">
+          <h1 className="mt-4 font-heading text-3xl font-bold tracking-wide text-brand-hover print:text-black">
+            {t("certificateTitle")}
+          </h1>
+          <p className="mt-6 text-sm text-muted print:text-black">{t("certificateIntro")}</p>
+          <p className="mt-2 font-heading text-3xl font-bold text-foreground print:text-black">
             {learnerName || (lang === "ar" ? "المتعلّم" : "the Learner")}
           </p>
-          <p className="mt-4 text-sm text-muted">{t("certificateBody")}</p>
-          <p className="mt-2 font-heading text-xl font-semibold text-accent">{courseName}</p>
-          <div className="mx-auto mt-8 h-px w-32 bg-border" />
-          <p className="mt-4 text-xs text-muted">
+          <p className="mt-4 text-sm text-muted print:text-black">{t("certificateBody")}</p>
+          <p className="mt-2 font-heading text-2xl font-semibold text-accent-text print:text-black">{courseName}</p>
+          <div className="mx-auto mt-8 h-px w-32 bg-border print:bg-black" />
+          <p className="mt-4 text-xs text-muted print:text-black">
             {t("certificateDate")}: {dateStr}
           </p>
         </div>

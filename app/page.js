@@ -184,24 +184,24 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="bg-brand-dark shadow-sm">
+      <header className="border-b-4 border-accent bg-brand-dark shadow-sm">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-white/20 bg-white/10">
               <GraduationCap size={18} className="text-white" />
             </div>
-            <span className="font-heading text-lg font-semibold text-white">{t("appName")}</span>
+            <span className="font-heading text-xl font-bold uppercase tracking-wider text-white">{t("appName")}</span>
           </div>
           <div className="flex items-center gap-3">
             {mode === "demo" && (
-              <span className="hidden rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-900 sm:inline-block">
+              <span className="hidden rounded-sm border border-warning-border bg-warning-bg px-3 py-1 text-xs font-bold uppercase tracking-wide text-warning sm:inline-block">
                 {t("demoModeBadge")}
               </span>
             )}
             <button
               type="button"
               onClick={toggleLanguage}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-white/20"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
             >
               <Languages size={14} /> {lang === "ar" ? "EN" : "عربي"}
             </button>
@@ -209,7 +209,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setPhase("dashboard")}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-white/20"
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
               >
                 <LayoutDashboard size={14} /> {t("dashboard")}
               </button>
@@ -290,7 +290,7 @@ export default function Home() {
         )}
 
         {phase === "error" && (
-          <div className="mx-auto max-w-lg rounded-xl border border-danger-border bg-danger-bg p-6 text-center shadow-sm">
+          <div className="mx-auto max-w-lg rounded-sm border border-danger-border bg-danger-bg p-6 text-center shadow-sm">
             <AlertTriangle size={24} className="mx-auto text-danger" />
             <p className="mt-2 text-sm font-medium text-danger">{t("errorTitle")}</p>
             <p className="mt-1 text-xs text-danger/70">{t("errorSubtitle")}</p>
@@ -307,7 +307,7 @@ export default function Home() {
             <button
               type="button"
               onClick={handleReset}
-              className="mt-4 cursor-pointer rounded-lg bg-accent px-5 py-2 font-medium text-white shadow-sm transition-colors duration-200 hover:bg-accent-hover"
+              className="mt-4 cursor-pointer rounded-sm bg-accent px-5 py-2 font-bold uppercase tracking-wide text-accent-on shadow-sm transition-colors duration-200 hover:bg-accent-hover"
             >
               {t("startOver")}
             </button>
@@ -345,7 +345,7 @@ function LoadingState({ label, preview }) {
       <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
       <p className="mt-3 text-sm text-muted">{label}</p>
       {preview && (
-        <div className="mt-4 max-h-48 overflow-hidden rounded-lg border border-border bg-card p-3 text-start shadow-sm">
+        <div className="mt-4 max-h-48 overflow-hidden rounded-sm border border-border bg-card p-3 text-start shadow-sm">
           <p className="whitespace-pre-wrap break-words font-mono text-xs text-muted" dir="ltr">
             {preview.slice(-700)}
             <span className="animate-pulse text-brand">▋</span>

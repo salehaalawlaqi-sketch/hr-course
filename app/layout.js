@@ -1,16 +1,16 @@
-import { Lexend, Source_Sans_3, Noto_Sans_Arabic } from "next/font/google";
+import { Bebas_Neue, IBM_Plex_Sans, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 
-const lexend = Lexend({
+const bebasNeue = Bebas_Neue({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400"],
 });
 
-const sourceSans = Source_Sans_3({
+const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const notoSansArabic = Noto_Sans_Arabic({
@@ -26,7 +26,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${lexend.variable} ${sourceSans.variable} ${notoSansArabic.variable} h-full`}>
+    <html lang="en" className={`${bebasNeue.variable} ${ibmPlexSans.variable} ${notoSansArabic.variable} h-full`}>
       <body className="min-h-full bg-background text-foreground antialiased">{children}</body>
     </html>
   );

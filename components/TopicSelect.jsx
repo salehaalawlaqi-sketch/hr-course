@@ -36,7 +36,7 @@ export default function TopicSelect({ lang, courseId, onSelect, onBack }) {
               key={topic.id}
               type="button"
               onClick={() => onSelect(topic.id)}
-              className="cursor-pointer rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="cursor-pointer rounded-sm border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="font-heading text-base font-semibold text-foreground">
