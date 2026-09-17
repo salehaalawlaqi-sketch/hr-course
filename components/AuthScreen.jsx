@@ -23,7 +23,7 @@ export default function AuthScreen({ lang, dbConfigured, onToggleLanguage, onAut
       const user = mode === "signin" ? await login({ name, pin }) : await signup({ name, pin, hrCode });
       onAuthed(user);
     } catch (err) {
-      setError(err.message);
+      setError(t(`authError_${err.code || "server_error"}`));
     } finally {
       setBusy(false);
     }

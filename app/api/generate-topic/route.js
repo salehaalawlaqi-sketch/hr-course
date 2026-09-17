@@ -1,5 +1,5 @@
 import { getClient, isLiveModeEnabled, MODEL } from "@/lib/llm";
-import { MOCK_TOPIC } from "@/lib/mockContent";
+import { MOCK_TOPIC, MOCK_TOPIC_AR } from "@/lib/mockContent";
 
 const LEVEL_GUIDANCE = {
   beginner: "Use simple explanations, basic HR terminology, and practical workplace examples.",
@@ -34,7 +34,8 @@ export async function POST(request) {
   }
 
   if (!isLiveModeEnabled()) {
-    return Response.json({ topic: { ...MOCK_TOPIC, title: topic }, mode: "demo" });
+    const mock = language === "ar" ? MOCK_TOPIC_AR : MOCK_TOPIC;
+    return Response.json({ topic: { ...mock, title: topic }, mode: "demo" });
   }
 
   const levelGuidance = LEVEL_GUIDANCE[level] || LEVEL_GUIDANCE.beginner;

@@ -4,21 +4,24 @@ import { verifyPin, setSessionCookie } from "@/lib/auth-server";
 
 export async function POST(request) {
   if (!isDbConfigured()) {
-    return NextResponse.json({ error: "No database is configured yet. Ask your admin to set DATABASE_URL." }, { status: 503 });
+    return NextResponse.json(
+      { error: "No database is configured yet. Ask your admin to set DATABASE_URL.", code: "db_not_configured" },
+      { status: 503 }
+    );
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request.", code: "server_error" }, { status: 400 });
   }
 
   const name = (body.name || "").trim();
   const pin = (body.pin || "").trim();
 
   if (!name || !pin) {
-    return NextResponse.json({ error: "Enter your name and PIN." }, { status: 400 });
+    return NextResponse.json({ error: "Enter your name and PIN.", code: "missing_fields" }, { status: 400 });
   }
 
   try {
@@ -27,12 +30,12 @@ export async function POST(request) {
     const user = rows[0];
 
     if (!user || !verifyPin(pin, user.pin_hash)) {
-      return NextResponse.json({ error: "Incorrect name or PIN." }, { status: 401 });
+      return NextResponse.json({ error: "Incorrect name or PIN.", code: "invalid_credentials" }, { status: 401 });
     }
 
     const publicUser = { id: user.id, name: user.name, role: user.role };
     return setSessionCookie(NextResponse.json({ user: publicUser }), publicUser);
   } catch (err) {
-    return NextResponse.json({ error: err.message || "Something went wrong." }, { status: 500 });
+    return NextResponse.json({ error: err.message || "Something went wrong.", code: "server_error" }, { status: 500 });
   }
 }

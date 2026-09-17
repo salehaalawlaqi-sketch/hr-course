@@ -57,7 +57,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
         const data = await res.json();
         setMessages((prev) => {
           const next = [...prev];
-          next[next.length - 1] = { role: "assistant", text: data.error || "Something went wrong." };
+          next[next.length - 1] = { role: "assistant", text: data.error || t("tutorGenericError") };
           return next;
         });
         return;
@@ -79,7 +79,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
       }
 
       if (full.includes("[[STREAM_ERROR]]")) {
-        const errText = full.split("[[STREAM_ERROR]]")[1]?.trim() || "The tutor ran into a problem.";
+        const errText = full.split("[[STREAM_ERROR]]")[1]?.trim() || t("tutorStreamError");
         setMessages((prev) => {
           const next = [...prev];
           next[next.length - 1] = { role: "assistant", text: errText };
@@ -89,7 +89,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
     } catch {
       setMessages((prev) => {
         const next = [...prev];
-        next[next.length - 1] = { role: "assistant", text: "The tutor is unreachable right now. Please try again." };
+        next[next.length - 1] = { role: "assistant", text: t("tutorUnreachable") };
         return next;
       });
     } finally {
@@ -111,7 +111,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Close tutor"
+              aria-label={t("closeTutor")}
               className="cursor-pointer rounded p-1 text-white/80 hover:bg-white/10 hover:text-white"
             >
               <X size={16} />
@@ -174,7 +174,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
               type="submit"
               disabled={mode === "demo" || isStreaming || !input.trim()}
               className="cursor-pointer rounded-sm bg-accent p-2 text-accent-on transition-colors duration-200 hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="Send"
+              aria-label={t("sendMessage")}
             >
               <Send size={16} />
             </button>
@@ -185,7 +185,7 @@ export default function TutorChat({ lang, course, topic, level, topicContent, qu
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close AI HR Tutor" : "Open AI HR Tutor"}
+        aria-label={open ? t("closeTutor") : t("openTutor")}
         className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-2 border-accent-on/20 bg-accent text-accent-on shadow-lg transition-colors duration-200 hover:bg-accent-hover"
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}

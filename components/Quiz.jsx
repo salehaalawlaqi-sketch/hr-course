@@ -68,8 +68,8 @@ export default function Quiz({ lang, questions, onSubmit }) {
                 onClick={() => selectChoice(i)}
                 className={
                   isSelected
-                    ? "cursor-pointer rounded-sm border-2 border-brand bg-brand/5 p-3 text-left text-foreground transition-colors duration-200"
-                    : "cursor-pointer rounded-sm border border-border bg-card p-3 text-left text-foreground transition-colors duration-200 hover:border-brand/50 hover:bg-brand/5"
+                    ? "cursor-pointer rounded-sm border-2 border-brand bg-brand/5 p-3 text-start text-foreground transition-colors duration-200"
+                    : "cursor-pointer rounded-sm border border-border bg-card p-3 text-start text-foreground transition-colors duration-200 hover:border-brand/50 hover:bg-brand/5"
                 }
               >
                 <span className={`me-2 font-semibold ${isSelected ? "text-brand-hover" : "text-muted"}`}>

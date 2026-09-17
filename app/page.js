@@ -88,7 +88,12 @@ export default function Home() {
       const res = await fetch("/api/generate-topic", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ course: course?.name, topic: resolvedTopicMeta?.title, level, language: lang }),
+        body: JSON.stringify({
+          course: lang === "ar" ? course?.nameAr : course?.name,
+          topic: lang === "ar" ? resolvedTopicMeta?.titleAr : resolvedTopicMeta?.title,
+          level,
+          language: lang,
+        }),
       });
 
       if ((res.headers.get("content-type") || "").includes("application/json")) {
@@ -122,8 +127,8 @@ export default function Home() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          course: course?.name,
-          topic: topicMeta?.title,
+          course: lang === "ar" ? course?.nameAr : course?.name,
+          topic: lang === "ar" ? topicMeta?.titleAr : topicMeta?.title,
           level,
           language: lang,
           readingContent: topicContent,
@@ -377,11 +382,11 @@ export default function Home() {
             <p className="mt-2 text-sm font-medium text-danger">{t("errorTitle")}</p>
             <p className="mt-1 text-xs text-danger/70">{t("errorSubtitle")}</p>
             {errorMessage && (
-              <details className="mt-3 text-left">
+              <details className="mt-3 text-start">
                 <summary className="cursor-pointer text-xs text-danger/70 hover:text-danger">
                   {t("technicalDetails")}
                 </summary>
-                <p className="mt-1 max-h-24 overflow-y-auto break-words font-mono text-xs text-danger/70">
+                <p className="mt-1 max-h-24 overflow-y-auto break-words font-mono text-xs text-danger/70" dir="ltr">
                   {errorMessage}
                 </p>
               </details>

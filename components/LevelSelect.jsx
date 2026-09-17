@@ -28,7 +28,7 @@ export default function LevelSelect({ lang, onSelect }) {
             key={level.id}
             type="button"
             onClick={() => onSelect(level.id)}
-            className="group cursor-pointer rounded-sm border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="group cursor-pointer rounded-sm border border-border bg-card p-4 text-start shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="font-heading text-base font-semibold text-foreground">

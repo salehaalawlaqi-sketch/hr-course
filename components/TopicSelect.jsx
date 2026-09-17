@@ -29,13 +29,13 @@ export default function TopicSelect({ lang, courseId, progress = {}, onSelect, o
               key={topic.id}
               type="button"
               onClick={() => onSelect(topic.id)}
-              className="cursor-pointer rounded-sm border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="cursor-pointer rounded-sm border border-border bg-card p-4 text-start shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="font-heading text-base font-semibold text-foreground">
                   {lang === "ar" ? topic.titleAr : topic.title}
                 </span>
-                {topicProgress?.passed && <CheckCircle2 size={16} className="shrink-0 text-success" aria-label="Completed" />}
+                {topicProgress?.passed && <CheckCircle2 size={16} className="shrink-0 text-success" aria-label={t("completedAriaLabel")} />}
               </div>
               <div className="mt-1.5 flex items-center gap-1 text-xs font-medium">
                 {topicProgress?.passed ? (

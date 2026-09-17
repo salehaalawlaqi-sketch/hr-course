@@ -4,8 +4,8 @@ import { ensureSchema } from "@/lib/db";
 
 export async function GET() {
   const user = await getSessionUser();
-  if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
-  if (user.role !== "hr") return NextResponse.json({ error: "HR access only." }, { status: 403 });
+  if (!user) return NextResponse.json({ error: "Not signed in.", code: "not_signed_in" }, { status: 401 });
+  if (user.role !== "hr") return NextResponse.json({ error: "HR access only.", code: "hr_only" }, { status: 403 });
 
   const sql = await ensureSchema();
   const users = await sql`SELECT id, name, created_at FROM users ORDER BY created_at ASC`;

@@ -1,5 +1,5 @@
 import { getClient, isLiveModeEnabled, MODEL } from "@/lib/llm";
-import { MOCK_QUIZZES } from "@/lib/mockContent";
+import { MOCK_QUIZZES, MOCK_QUIZZES_AR } from "@/lib/mockContent";
 
 const SYSTEM_PROMPT = `You are writing a 5-question quiz that tests ONLY the information contained in the reading material provided by the user. You must not test outside knowledge.
 
@@ -7,7 +7,7 @@ Before producing each question, internally verify: Question -> Correct Answer ->
 
 Rules:
 - Use a mix of question types across the 5 questions: at least one "mcq", one "true_false", and one of "scenario" or "sjt".
-- Every "mcq", "scenario", and "sjt" question must have exactly 4 choices. Every "true_false" question must have exactly choices ["True", "False"].
+- Every "mcq", "scenario", and "sjt" question must have exactly 4 choices. Every "true_false" question must have exactly 2 choices: ["True", "False"] if writing in English, or ["صح", "خطأ"] if writing in Arabic.
 - Incorrect choices must be plausible but clearly distinguishable from the reading material, not silly or obviously wrong.
 - Test understanding, not verbatim memorization, wherever possible.
 - Avoid ambiguous questions and avoid requiring outside knowledge.
@@ -39,7 +39,8 @@ export async function POST(request) {
 
   if (!isLiveModeEnabled()) {
     const mockVariant = variant === "B" ? "B" : "A";
-    return Response.json({ questions: MOCK_QUIZZES[mockVariant], mode: "demo" });
+    const mockSet = language === "ar" ? MOCK_QUIZZES_AR : MOCK_QUIZZES;
+    return Response.json({ questions: mockSet[mockVariant], mode: "demo" });
   }
 
   if (!readingContent) {

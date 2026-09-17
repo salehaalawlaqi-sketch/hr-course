@@ -13,6 +13,7 @@ function formatDate(iso, lang) {
       year: "numeric",
       month: "short",
       day: "numeric",
+      numberingSystem: "latn",
     });
   } catch {
     return null;
@@ -28,7 +29,7 @@ export default function HRDashboard({ lang, onBack }) {
   useEffect(() => {
     fetchHrSummary()
       .then((rows) => setSummaries(rows.map(({ profile, progress }) => summarizeProfile(profile, progress))))
-      .catch((err) => setError(err.message));
+      .catch((err) => setError(t(`hrError_${err.code || "server_error"}`)));
   }, []);
 
   const recentActivity = (summaries || [])

@@ -4,14 +4,17 @@ import { hashPin, setSessionCookie } from "@/lib/auth-server";
 
 export async function POST(request) {
   if (!isDbConfigured()) {
-    return NextResponse.json({ error: "No database is configured yet. Ask your admin to set DATABASE_URL." }, { status: 503 });
+    return NextResponse.json(
+      { error: "No database is configured yet. Ask your admin to set DATABASE_URL.", code: "db_not_configured" },
+      { status: 503 }
+    );
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request.", code: "server_error" }, { status: 400 });
   }
 
   const name = (body.name || "").trim();
@@ -19,10 +22,13 @@ export async function POST(request) {
   const hrCode = (body.hrCode || "").trim();
 
   if (name.length < 2 || name.length > 60) {
-    return NextResponse.json({ error: "Please enter your name (2–60 characters)." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please enter your name (2–60 characters).", code: "invalid_name" },
+      { status: 400 }
+    );
   }
   if (!/^\d{4,8}$/.test(pin)) {
-    return NextResponse.json({ error: "PIN must be 4–8 digits." }, { status: 400 });
+    return NextResponse.json({ error: "PIN must be 4–8 digits.", code: "invalid_pin" }, { status: 400 });
   }
 
   try {
@@ -30,7 +36,10 @@ export async function POST(request) {
 
     const existing = await sql`SELECT id FROM users WHERE lower(name) = lower(${name})`;
     if (existing.length > 0) {
-      return NextResponse.json({ error: "That name is already taken. Try signing in instead." }, { status: 409 });
+      return NextResponse.json(
+        { error: "That name is already taken. Try signing in instead.", code: "name_taken" },
+        { status: 409 }
+      );
     }
 
     const role = hrCode && process.env.HR_SIGNUP_CODE && hrCode === process.env.HR_SIGNUP_CODE ? "hr" : "learner";
@@ -46,8 +55,11 @@ export async function POST(request) {
     return setSessionCookie(NextResponse.json({ user }), user);
   } catch (err) {
     if (err.code === "23505") {
-      return NextResponse.json({ error: "That name is already taken. Try signing in instead." }, { status: 409 });
+      return NextResponse.json(
+        { error: "That name is already taken. Try signing in instead.", code: "name_taken" },
+        { status: 409 }
+      );
     }
-    return NextResponse.json({ error: err.message || "Something went wrong." }, { status: 500 });
+    return NextResponse.json({ error: err.message || "Something went wrong.", code: "server_error" }, { status: 500 });
   }
 }
