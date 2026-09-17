@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { CheckCircle2, ArrowLeft, ArrowRight, Circle } from "lucide-react";
 import { COURSES, TOPICS_BY_COURSE } from "@/lib/catalog";
-import { getProgress } from "@/lib/progress";
 import { translate } from "@/lib/i18n";
 
-export default function TopicSelect({ lang, courseId, onSelect, onBack }) {
+export default function TopicSelect({ lang, courseId, progress = {}, onSelect, onBack }) {
   const t = (key, vars) => translate(lang, key, vars);
   const course = COURSES.find((c) => c.id === courseId);
   const topics = TOPICS_BY_COURSE[courseId] || [];
-  const [progress, setProgress] = useState({});
   const BackIcon = lang === "ar" ? ArrowRight : ArrowLeft;
-
-  useEffect(() => {
-    setProgress(getProgress());
-  }, []);
 
   return (
     <div className="mx-auto max-w-2xl">

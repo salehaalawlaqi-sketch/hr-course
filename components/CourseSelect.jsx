@@ -1,20 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { COURSES, TOPICS_BY_COURSE, LEVELS } from "@/lib/catalog";
-import { getProgress } from "@/lib/progress";
 import { translate } from "@/lib/i18n";
 
-export default function CourseSelect({ lang, level, onSelect, onChangeLevel }) {
+export default function CourseSelect({ lang, level, progress = {}, onSelect, onChangeLevel }) {
   const t = (key, vars) => translate(lang, key, vars);
   const levelMeta = LEVELS.find((l) => l.id === level);
   const levelName = lang === "ar" ? levelMeta?.nameAr : levelMeta?.name;
-  const [progress, setProgress] = useState({});
-
-  useEffect(() => {
-    setProgress(getProgress());
-  }, []);
 
   return (
     <div className="mx-auto max-w-3xl">

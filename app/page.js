@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GraduationCap, AlertTriangle, LayoutDashboard, Languages } from "lucide-react";
+import { GraduationCap, AlertTriangle, LayoutDashboard, Languages, ShieldCheck, LogOut } from "lucide-react";
+import AuthScreen from "@/components/AuthScreen";
 import LevelSelect from "@/components/LevelSelect";
 import CourseSelect from "@/components/CourseSelect";
 import TopicSelect from "@/components/TopicSelect";
@@ -9,16 +10,22 @@ import TopicReading from "@/components/TopicReading";
 import Quiz from "@/components/Quiz";
 import ResultsReview from "@/components/ResultsReview";
 import Dashboard from "@/components/Dashboard";
+import HRDashboard from "@/components/HRDashboard";
 import TutorChat from "@/components/TutorChat";
 import Certificate from "@/components/Certificate";
 import { COURSES, TOPICS_BY_COURSE } from "@/lib/catalog";
 import { gradeQuiz } from "@/lib/scoring";
 import { readStreamedJson } from "@/lib/readStream";
 import { validateQuestions, normalizeRelatedSection } from "@/lib/quizValidation";
-import { recordTopicResult, getStoredLanguage, setStoredLanguage, getLearnerName } from "@/lib/progress";
+import { getStoredLanguage, setStoredLanguage } from "@/lib/progress";
+import { fetchMe, logout as apiLogout, fetchProgress, recordProgress } from "@/lib/api";
 import { translate } from "@/lib/i18n";
 
 export default function Home() {
+  const [authUser, setAuthUser] = useState(undefined); // undefined = checking, null = signed out
+  const [dbConfigured, setDbConfigured] = useState(true);
+  const [progress, setProgress] = useState({});
+
   const [phase, setPhase] = useState("level");
   const [lang, setLang] = useState("en");
   const [level, setLevel] = useState(null);
@@ -41,7 +48,15 @@ export default function Home() {
 
   useEffect(() => {
     setLang(getStoredLanguage());
+    fetchMe().then(({ user, dbConfigured: configured }) => {
+      setAuthUser(user);
+      setDbConfigured(configured);
+    });
   }, []);
+
+  useEffect(() => {
+    if (authUser) fetchProgress().then(setProgress);
+  }, [authUser]);
 
   useEffect(() => {
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
@@ -52,6 +67,16 @@ export default function Home() {
     const next = lang === "ar" ? "en" : "ar";
     setLang(next);
     setStoredLanguage(next);
+  }
+
+  async function handleLogout() {
+    await apiLogout();
+    setAuthUser(null);
+    setProgress({});
+    setPhase("level");
+    setLevel(null);
+    setCourseId(null);
+    setTopicId(null);
   }
 
   async function loadTopic(selectedTopicId) {
@@ -135,12 +160,27 @@ export default function Home() {
     }
   }
 
-  function handleSubmitQuiz(submittedAnswers) {
+  async function handleSubmitQuiz(submittedAnswers) {
     setAnswers(submittedAnswers);
     const result = gradeQuiz(quizQuestions, submittedAnswers);
     setGrade(result);
-    recordTopicResult(topicId, result);
+    setProgress((prev) => {
+      const existing = prev[topicId];
+      return {
+        ...prev,
+        [topicId]: {
+          passed: result.passed || existing?.passed || false,
+          bestScore: Math.max(result.score, existing?.bestScore ?? 0),
+          lastAttempt: new Date().toISOString(),
+        },
+      };
+    });
     setPhase("results");
+    try {
+      await recordProgress(topicId, result);
+    } catch {
+      // best-effort — the optimistic local update above already reflects the attempt
+    }
   }
 
   function handleReviewTopic() {
@@ -182,22 +222,41 @@ export default function Home() {
     setPhase("topic");
   }
 
+  if (authUser === undefined) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!authUser) {
+    return (
+      <div className="min-h-screen px-6 py-10">
+        <AuthScreen lang={lang} dbConfigured={dbConfigured} onAuthed={setAuthUser} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b-4 border-accent bg-brand-dark shadow-sm">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-6 py-4">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-white/20 bg-white/10">
               <GraduationCap size={18} className="text-white" />
             </div>
             <span className="font-heading text-xl font-bold uppercase tracking-wider text-white">{t("appName")}</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             {mode === "demo" && (
               <span className="hidden rounded-sm border border-warning-border bg-warning-bg px-3 py-1 text-xs font-bold uppercase tracking-wide text-warning sm:inline-block">
                 {t("demoModeBadge")}
               </span>
             )}
+            <span className="hidden text-xs font-medium text-white/70 sm:inline-block">
+              {t("signedInAs", { name: authUser.name })}
+            </span>
             <button
               type="button"
               onClick={toggleLanguage}
@@ -205,6 +264,15 @@ export default function Home() {
             >
               <Languages size={14} /> {lang === "ar" ? "EN" : "عربي"}
             </button>
+            {authUser.role === "hr" && phase !== "hr" && (
+              <button
+                type="button"
+                onClick={() => setPhase("hr")}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
+              >
+                <ShieldCheck size={14} /> {t("hrDashboardNav")}
+              </button>
+            )}
             {level && phase !== "dashboard" && (
               <button
                 type="button"
@@ -214,15 +282,27 @@ export default function Home() {
                 <LayoutDashboard size={14} /> {t("dashboard")}
               </button>
             )}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
+            >
+              <LogOut size={14} /> {t("logOut")}
+            </button>
           </div>
         </div>
       </header>
 
       <main className="flex-1 px-6 pt-10 pb-28">
+        {phase === "hr" && authUser.role === "hr" && (
+          <HRDashboard lang={lang} onBack={() => setPhase(level ? "dashboard" : "level")} />
+        )}
+
         {phase === "dashboard" && (
           <Dashboard
             lang={lang}
             level={level}
+            progress={progress}
             onBack={() => setPhase("course")}
             onViewCertificate={(id) => setCertificateCourseId(id)}
           />
@@ -242,6 +322,7 @@ export default function Home() {
           <CourseSelect
             lang={lang}
             level={level}
+            progress={progress}
             onChangeLevel={() => setPhase("level")}
             onSelect={(id) => {
               setCourseId(id);
@@ -254,6 +335,7 @@ export default function Home() {
           <TopicSelect
             lang={lang}
             courseId={courseId}
+            progress={progress}
             onBack={() => setPhase("course")}
             onSelect={(id) => {
               setTopicId(id);
@@ -331,7 +413,7 @@ export default function Home() {
         <Certificate
           lang={lang}
           course={certificateCourse}
-          learnerName={getLearnerName()}
+          learnerName={authUser.name}
           onClose={() => setCertificateCourseId(null)}
         />
       )}
