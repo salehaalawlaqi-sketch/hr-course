@@ -1,10 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, TrendingUp, TrendingDown, BookOpen, Target, Award, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, TrendingUp, TrendingDown, BookOpen, Target, Award, Star, Users, Clock, UserPlus } from "lucide-react";
 import { LEVELS } from "@/lib/catalog";
-import { getProgress, computeDashboardStats, getLearnerName, setLearnerName } from "@/lib/progress";
+import {
+  getProgress,
+  computeDashboardStats,
+  getLearnerName,
+  setLearnerName,
+  getProfiles,
+  getActiveProfileId,
+  setActiveProfileId,
+  createProfile,
+  getAllProfilesSummary,
+} from "@/lib/progress";
 import { translate } from "@/lib/i18n";
+
+function formatDate(iso, lang) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleDateString(lang === "ar" ? "ar-EG" : "en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return null;
+  }
+}
 
 function StatCard({ icon: Icon, label, value }) {
   return (
@@ -23,13 +46,25 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
   const [stats, setStats] = useState(null);
   const [name, setName] = useState("");
   const [barsFilled, setBarsFilled] = useState(false);
+  const [profiles, setProfiles] = useState([]);
+  const [activeProfileId, setActiveProfileIdState] = useState(null);
+  const [allSummaries, setAllSummaries] = useState([]);
+  const [addingProfile, setAddingProfile] = useState(false);
+  const [newProfileName, setNewProfileName] = useState("");
   const levelMeta = LEVELS.find((l) => l.id === level);
   const levelName = lang === "ar" ? levelMeta?.nameAr : levelMeta?.name;
   const BackIcon = lang === "ar" ? ArrowRight : ArrowLeft;
 
-  useEffect(() => {
+  function refreshAll() {
     setStats(computeDashboardStats(getProgress()));
     setName(getLearnerName());
+    setProfiles(getProfiles());
+    setActiveProfileIdState(getActiveProfileId());
+    setAllSummaries(getAllProfilesSummary());
+  }
+
+  useEffect(() => {
+    refreshAll();
   }, []);
 
   useEffect(() => {
@@ -42,9 +77,33 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
     const value = e.target.value;
     setName(value);
     setLearnerName(value);
+    setProfiles(getProfiles());
+    setAllSummaries(getAllProfilesSummary());
+  }
+
+  function handleSwitchProfile(id) {
+    if (id === activeProfileId) return;
+    setActiveProfileId(id);
+    setBarsFilled(false);
+    refreshAll();
+  }
+
+  function handleAddProfile() {
+    const trimmed = newProfileName.trim();
+    if (!trimmed) return;
+    createProfile(trimmed);
+    setNewProfileName("");
+    setAddingProfile(false);
+    setBarsFilled(false);
+    refreshAll();
   }
 
   if (!stats) return null;
+
+  const recentActivity = allSummaries
+    .flatMap(({ activity }) => activity)
+    .sort((a, b) => new Date(b.lastAttempt) - new Date(a.lastAttempt))
+    .slice(0, 15);
 
   const coursesWithProgress = stats.courseStats.filter((c) => c.attemptedCount > 0);
   const completedCourses = stats.courseStats.filter((c) => c.allComplete);
@@ -79,6 +138,67 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
           placeholder={t("yourNamePlaceholder")}
           className="mt-1.5 w-full rounded-sm border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand"
         />
+
+        {profiles.length > 0 && (
+          <div className="mt-4 border-t border-border pt-3">
+            <label className="text-xs font-medium uppercase tracking-wide text-muted" htmlFor="learner-profile">
+              {t("switchProfile")}
+            </label>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2">
+              <select
+                id="learner-profile"
+                value={activeProfileId || ""}
+                onChange={(e) => handleSwitchProfile(e.target.value)}
+                className="rounded-sm border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand"
+              >
+                {profiles.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+
+              {addingProfile ? (
+                <>
+                  <input
+                    type="text"
+                    autoFocus
+                    value={newProfileName}
+                    onChange={(e) => setNewProfileName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddProfile()}
+                    placeholder={t("newProfileNamePlaceholder")}
+                    className="rounded-sm border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddProfile}
+                    className="cursor-pointer rounded-sm bg-accent px-3 py-2 text-xs font-medium text-accent-on shadow-sm transition-colors duration-200 hover:bg-accent-hover"
+                  >
+                    {t("addProfileConfirm")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAddingProfile(false);
+                      setNewProfileName("");
+                    }}
+                    className="cursor-pointer rounded-sm border border-border px-3 py-2 text-xs font-medium text-muted transition-colors duration-200 hover:border-brand hover:text-brand-hover"
+                  >
+                    {t("cancel")}
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setAddingProfile(true)}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-sm border border-border px-3 py-2 text-xs font-medium text-muted transition-colors duration-200 hover:border-brand hover:text-brand-hover"
+                >
+                  <UserPlus size={13} /> {t("addProfile")}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-4 rounded-sm border border-border bg-card p-5 shadow-sm">
@@ -102,6 +222,79 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
         <StatCard icon={Target} label={t("topicsCompletedStat")} value={stats.completedTopicsCount} />
         <StatCard icon={TrendingUp} label={t("averageScore")} value={`${stats.averageScore}%`} />
       </div>
+
+      {allSummaries.length > 0 && (
+        <div className="mt-6">
+          <h2 className="flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted">
+            <Users size={14} /> {t("teamActivity")}
+          </h2>
+          <p className="mt-1 text-xs text-muted">{t("teamActivitySubtitle")}</p>
+          <div className="mt-2 overflow-x-auto rounded-sm border border-border bg-card shadow-sm">
+            <table className="w-full min-w-[520px] text-sm">
+              <thead>
+                <tr className="border-b border-border text-start text-xs uppercase tracking-wide text-muted">
+                  <th className="px-3 py-2 text-start font-medium">{t("nameColumn")}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t("coursesCompleted")}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t("topicsCompletedStat")}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t("averageScore")}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t("lastActivityColumn")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allSummaries.map(({ profile, stats: userStats }) => (
+                  <tr
+                    key={profile.id}
+                    className={
+                      profile.id === activeProfileId
+                        ? "border-b border-border bg-brand/5 last:border-b-0"
+                        : "border-b border-border last:border-b-0"
+                    }
+                  >
+                    <td className="px-3 py-2 font-medium text-foreground">{profile.name}</td>
+                    <td className="px-3 py-2 text-foreground">{userStats.coursesCompleted}</td>
+                    <td className="px-3 py-2 text-foreground">{userStats.completedTopicsCount}</td>
+                    <td className="px-3 py-2 text-foreground">{userStats.averageScore}%</td>
+                    <td className="px-3 py-2 text-muted">
+                      {formatDate(userStats.lastActivityAt, lang) || t("neverAttempted")}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {recentActivity.length > 0 && (
+        <div className="mt-6">
+          <h2 className="flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted">
+            <Clock size={14} /> {t("recentActivityTitle")}
+          </h2>
+          <div className="mt-2 flex flex-col gap-1.5">
+            {recentActivity.map((a) => (
+              <div
+                key={`${a.profileId}-${a.topic.id}`}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-sm border border-border bg-card px-3 py-2 text-sm shadow-sm"
+              >
+                <div className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="font-medium text-foreground">{a.profileName}</span>
+                  <span className="text-muted">
+                    {lang === "ar" ? a.topic.titleAr : a.topic.title}
+                    {" · "}
+                    {lang === "ar" ? a.course.nameAr : a.course.name}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={a.passed ? "font-medium text-success" : "font-medium text-danger"}>
+                    {a.score}%
+                  </span>
+                  <span className="text-xs text-muted">{formatDate(a.lastAttempt, lang)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {completedCourses.length > 0 && (
         <div className="mt-6">
