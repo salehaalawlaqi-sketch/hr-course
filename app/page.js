@@ -233,7 +233,7 @@ export default function Home() {
   if (!authUser) {
     return (
       <div className="min-h-screen px-6 py-10">
-        <AuthScreen lang={lang} dbConfigured={dbConfigured} onAuthed={setAuthUser} />
+        <AuthScreen lang={lang} dbConfigured={dbConfigured} onToggleLanguage={toggleLanguage} onAuthed={setAuthUser} />
       </div>
     );
   }

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { GraduationCap, Lock } from "lucide-react";
+import { GraduationCap, Lock, Languages } from "lucide-react";
 import { translate } from "@/lib/i18n";
 import { login, signup } from "@/lib/api";
 
-export default function AuthScreen({ lang, dbConfigured, onAuthed }) {
+export default function AuthScreen({ lang, dbConfigured, onToggleLanguage, onAuthed }) {
   const t = (key, vars) => translate(lang, key, vars);
   const [mode, setMode] = useState("signin");
   const [name, setName] = useState("");
@@ -31,6 +31,16 @@ export default function AuthScreen({ lang, dbConfigured, onAuthed }) {
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center">
+      {onToggleLanguage && (
+        <button
+          type="button"
+          onClick={onToggleLanguage}
+          className="mx-auto mb-2 inline-flex cursor-pointer items-center gap-1.5 self-center rounded-sm border border-border bg-card px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-muted shadow-sm transition-colors duration-200 hover:border-brand hover:text-brand-hover"
+        >
+          <Languages size={14} /> {lang === "ar" ? "EN" : "عربي"}
+        </button>
+      )}
+
       <div className="text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-sm border-2 border-brand bg-brand/10">
           <GraduationCap size={26} className="text-brand" />
