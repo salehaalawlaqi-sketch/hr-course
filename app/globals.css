@@ -70,7 +70,7 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: 0.01em;
+  letter-spacing: normal;
 }
 
 [dir="rtl"] body,
@@ -89,6 +89,31 @@ h1, h2, h3, h4 {
 ::selection {
   background: var(--accent);
   color: var(--accent-on);
+}
+
+.animate-progress-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.6) 0px,
+    rgba(255, 255, 255, 0.6) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  background-size: 28px 28px;
+  animation: progress-stripes 900ms linear infinite;
+}
+
+[dir="rtl"] .animate-progress-stripes {
+  animation-direction: reverse;
+}
+
+@keyframes progress-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 28px 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

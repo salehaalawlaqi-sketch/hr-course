@@ -1,10 +1,10 @@
-import { Bebas_Neue, IBM_Plex_Sans, Noto_Sans_Arabic } from "next/font/google";
+import { Oswald, IBM_Plex_Sans, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 
-const bebasNeue = Bebas_Neue({
+const oswald = Oswald({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["500", "600", "700"],
 });
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -26,7 +26,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${bebasNeue.variable} ${ibmPlexSans.variable} ${notoSansArabic.variable} h-full`}>
+    <html lang="en" className={`${oswald.variable} ${ibmPlexSans.variable} ${notoSansArabic.variable} h-full`}>
       <body className="min-h-full bg-background text-foreground antialiased">{children}</body>
     </html>
   );

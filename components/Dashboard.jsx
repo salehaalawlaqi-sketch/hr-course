@@ -22,6 +22,7 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
   const t = (key, vars) => translate(lang, key, vars);
   const [stats, setStats] = useState(null);
   const [name, setName] = useState("");
+  const [barsFilled, setBarsFilled] = useState(false);
   const levelMeta = LEVELS.find((l) => l.id === level);
   const levelName = lang === "ar" ? levelMeta?.nameAr : levelMeta?.name;
   const BackIcon = lang === "ar" ? ArrowRight : ArrowLeft;
@@ -30,6 +31,12 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
     setStats(computeDashboardStats(getProgress()));
     setName(getLearnerName());
   }, []);
+
+  useEffect(() => {
+    if (!stats) return;
+    const raf = requestAnimationFrame(() => setBarsFilled(true));
+    return () => cancelAnimationFrame(raf);
+  }, [stats]);
 
   function handleNameChange(e) {
     const value = e.target.value;
@@ -79,11 +86,13 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
           <span className="font-medium text-foreground">{t("overallProgress")}</span>
           <span className="text-muted">{t("topicsUnit", { completed: stats.completedTopicsCount, total: stats.totalTopics })}</span>
         </div>
-        <div className="mt-2 h-2.5 rounded-sm bg-border">
+        <div className="mt-2 h-2.5 overflow-hidden rounded-sm bg-border">
           <div
-            className="h-full rounded-sm bg-brand transition-all duration-300"
-            style={{ width: `${stats.overallProgressPct}%` }}
-          />
+            className="relative h-full overflow-hidden rounded-sm bg-brand transition-[width] duration-1000 ease-out"
+            style={{ width: barsFilled ? `${stats.overallProgressPct}%` : "0%" }}
+          >
+            <div className="absolute inset-0 animate-progress-stripes opacity-25" />
+          </div>
         </div>
       </div>
 
@@ -123,7 +132,7 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
         <div className="mt-6">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">{t("courseProgress")}</h2>
           <div className="mt-2 flex flex-col gap-2">
-            {coursesWithProgress.map(({ course, totalTopics, completedCount }) => (
+            {coursesWithProgress.map(({ course, totalTopics, completedCount }, i) => (
               <div key={course.id} className="rounded-sm border border-border bg-card p-3 shadow-sm">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium text-foreground">{lang === "ar" ? course.nameAr : course.name}</span>
@@ -131,10 +140,13 @@ export default function Dashboard({ lang, level, onBack, onViewCertificate }) {
                     {completedCount}/{totalTopics}
                   </span>
                 </div>
-                <div className="mt-1.5 h-1.5 rounded-sm bg-border">
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-sm bg-border">
                   <div
-                    className="h-full rounded-sm bg-brand"
-                    style={{ width: `${(completedCount / totalTopics) * 100}%` }}
+                    className="h-full rounded-sm bg-brand transition-[width] duration-700 ease-out"
+                    style={{
+                      width: barsFilled ? `${(completedCount / totalTopics) * 100}%` : "0%",
+                      transitionDelay: `${Math.min(i, 10) * 60}ms`,
+                    }}
                   />
                 </div>
               </div>
