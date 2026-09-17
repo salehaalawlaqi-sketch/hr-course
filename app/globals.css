@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f0fdfa;
+  --foreground: #134e4a;
+  --muted: #3f6b66;
+  --border: #99f6e4;
+  --card: #ffffff;
+
+  --brand: #0d9488;
+  --brand-dark: #115e59;
+  --brand-hover: #0f766e;
+
+  --accent: #c2410c;
+  --accent-hover: #9a3412;
+  --accent-soft-bg: #ffedd5;
+  --accent-soft-border: #fed7aa;
+
+  --success: #16a34a;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --danger-border: #fecaca;
+
+  --warning: #d97706;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-hover: var(--brand-hover);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft-bg: var(--accent-soft-bg);
+  --color-accent-soft-border: var(--accent-soft-border);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-border: var(--success-border);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-border: var(--danger-border);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-border: var(--warning-border);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-arabic: var(--font-arabic);
+}
+
+body {
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  background-image: linear-gradient(180deg, #ffffff 0%, var(--background) 420px);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+}
+
+[dir="rtl"] body,
+[dir="rtl"] {
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4 {
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
