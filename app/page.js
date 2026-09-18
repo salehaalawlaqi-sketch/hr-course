@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GraduationCap, AlertTriangle, LayoutDashboard, Languages, ShieldCheck, LogOut } from "lucide-react";
+import Link from "next/link";
+import { GraduationCap, AlertTriangle, LayoutDashboard, Languages, ShieldCheck, LogOut, ClipboardList } from "lucide-react";
 import AuthScreen from "@/components/AuthScreen";
 import LevelSelect from "@/components/LevelSelect";
 import CourseSelect from "@/components/CourseSelect";
@@ -269,6 +270,12 @@ export default function Home() {
             >
               <Languages size={14} /> {lang === "ar" ? "EN" : "عربي"}
             </button>
+            <Link
+              href="/hr-specialist-assessment"
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-sm border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/20"
+            >
+              <ClipboardList size={14} /> {t("specialistAssessmentNav")}
+            </Link>
             {authUser.role === "hr" && phase !== "hr" && (
               <button
                 type="button"

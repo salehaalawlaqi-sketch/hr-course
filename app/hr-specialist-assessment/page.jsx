@@ -1,5 +1,9 @@
 import HRSpecialistTestAgent from "@/components/HRSpecialistTestAgent";
 
 export default function HRSpecialistAssessmentPage() {
-  return <HRSpecialistTestAgent />;
+  return (
+    <div dir="ltr" lang="en">
+      <HRSpecialistTestAgent />
+    </div>
+  );
 }
