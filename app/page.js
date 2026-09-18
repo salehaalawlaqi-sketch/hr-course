@@ -299,6 +299,12 @@ export default function Home() {
       </header>
 
       <main className="flex-1 px-6 pt-10 pb-28">
+        <div className="mx-auto mb-6 max-w-3xl">
+          <h2 className="font-heading text-xl font-semibold text-foreground sm:text-2xl">
+            {t("welcomeBack", { name: authUser.name })}
+          </h2>
+        </div>
+
         {phase === "hr" && authUser.role === "hr" && (
           <HRDashboard lang={lang} onBack={() => setPhase(level ? "dashboard" : "level")} />
         )}
@@ -308,6 +314,7 @@ export default function Home() {
             lang={lang}
             level={level}
             progress={progress}
+            userName={authUser.name}
             onBack={() => setPhase("course")}
             onViewCertificate={(id) => setCertificateCourseId(id)}
           />

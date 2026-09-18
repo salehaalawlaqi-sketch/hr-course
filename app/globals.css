@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #eeead9;
-  --foreground: #23271b;
-  --muted: #5c5f47;
-  --border: #c7c2a0;
-  --card: #f8f6ec;
+  --background: #eef1f5;
+  --foreground: #16233a;
+  --muted: #5b6b80;
+  --border: #ccd6e0;
+  --card: #ffffff;
 
-  --brand: #4a5d23;
-  --brand-dark: #2e3a15;
-  --brand-hover: #3d4d1c;
+  --brand: #1e3a5f;
+  --brand-dark: #10233b;
+  --brand-hover: #2a4d7a;
 
-  --accent: #ff6b00;
-  --accent-on: #1a1d14;
-  --accent-text: #b34700;
-  --accent-hover: #e65c00;
-  --accent-soft-bg: #fbe4cc;
-  --accent-soft-border: #e3ab6e;
+  --accent: #d4a017;
+  --accent-on: #1a1400;
+  --accent-text: #8a6a0a;
+  --accent-hover: #b8890a;
+  --accent-soft-bg: #f7e9c4;
+  --accent-soft-border: #e3c576;
 
   --success: #1f7a3d;
   --success-bg: #dff3e4;
@@ -63,8 +63,8 @@
 body {
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   background-image:
-    repeating-linear-gradient(135deg, rgba(74, 93, 35, 0.05) 0px, rgba(74, 93, 35, 0.05) 2px, transparent 2px, transparent 14px),
-    linear-gradient(180deg, #e2ddc0 0%, var(--background) 420px);
+    repeating-linear-gradient(135deg, rgba(30, 58, 95, 0.05) 0px, rgba(30, 58, 95, 0.05) 2px, transparent 2px, transparent 14px),
+    linear-gradient(180deg, #dde5ee 0%, var(--background) 420px);
   background-attachment: fixed;
 }
 

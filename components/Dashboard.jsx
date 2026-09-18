@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, TrendingUp, TrendingDown, BookOpen, Target, Awar
 import { LEVELS } from "@/lib/catalog";
 import { computeDashboardStats } from "@/lib/progress";
 import { translate } from "@/lib/i18n";
+import { ProgressRing, CourseScoreBars } from "./ProgressCharts";
 
 function StatCard({ icon: Icon, label, value }) {
   return (
@@ -18,7 +19,7 @@ function StatCard({ icon: Icon, label, value }) {
   );
 }
 
-export default function Dashboard({ lang, level, progress, onBack, onViewCertificate }) {
+export default function Dashboard({ lang, level, progress, userName, onBack, onViewCertificate }) {
   const t = (key, vars) => translate(lang, key, vars);
   const [barsFilled, setBarsFilled] = useState(false);
   const levelMeta = LEVELS.find((l) => l.id === level);
@@ -26,6 +27,10 @@ export default function Dashboard({ lang, level, progress, onBack, onViewCertifi
   const BackIcon = lang === "ar" ? ArrowRight : ArrowLeft;
 
   const stats = computeDashboardStats(progress || {});
+  const scoredCourses = stats.courseStats
+    .filter((c) => c.attemptedCount > 0)
+    .sort((a, b) => b.averageScore - a.averageScore);
+  const initial = (userName || "?").trim().charAt(0).toUpperCase();
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setBarsFilled(true));
@@ -44,36 +49,40 @@ export default function Dashboard({ lang, level, progress, onBack, onViewCertifi
       >
         <BackIcon size={14} /> {t("back")}
       </button>
-      <div className="mt-3 flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-foreground">{t("yourProgress")}</h1>
-        {levelName && (
-          <span className="rounded-sm border border-border bg-card px-3 py-1 text-xs font-medium text-muted shadow-sm">
-            {t("levelLabel", { value: levelName })}
-          </span>
-        )}
-      </div>
 
-      <div className="mt-6 rounded-sm border border-border bg-card p-5 shadow-sm">
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-medium text-foreground">{t("overallProgress")}</span>
-          <span className="text-muted">{t("topicsUnit", { completed: stats.completedTopicsCount, total: stats.totalTopics })}</span>
-        </div>
-        <div className="mt-2 h-2.5 overflow-hidden rounded-sm bg-border">
-          <div
-            className="relative h-full overflow-hidden rounded-sm bg-brand transition-[width] duration-1000 ease-out"
-            style={{ width: barsFilled ? `${stats.overallProgressPct}%` : "0%" }}
-          >
-            <div className="absolute inset-0 animate-progress-stripes opacity-25" />
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm border-2 border-brand bg-gradient-to-br from-brand/15 to-brand/5 font-heading text-lg font-bold text-brand">
+            {initial}
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">{userName || t("yourProgress")}</h1>
+            {levelName && <p className="text-xs text-muted">{t("levelLabel", { value: levelName })}</p>}
           </div>
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard icon={BookOpen} label={t("coursesStarted")} value={stats.coursesStarted} />
-        <StatCard icon={Award} label={t("coursesCompleted")} value={stats.coursesCompleted} />
-        <StatCard icon={Target} label={t("topicsCompletedStat")} value={stats.completedTopicsCount} />
-        <StatCard icon={TrendingUp} label={t("averageScore")} value={`${stats.averageScore}%`} />
+      <div className="mt-6 flex flex-col gap-4 rounded-sm border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center">
+        <ProgressRing
+          pct={stats.overallProgressPct}
+          label={t("overallProgress")}
+          sublabel={t("topicsUnit", { completed: stats.completedTopicsCount, total: stats.totalTopics })}
+        />
+        <div className="flex-1">
+          <div className="grid grid-cols-2 gap-3">
+            <StatCard icon={BookOpen} label={t("coursesStarted")} value={stats.coursesStarted} />
+            <StatCard icon={Award} label={t("coursesCompleted")} value={stats.coursesCompleted} />
+            <StatCard icon={Target} label={t("topicsCompletedStat")} value={stats.completedTopicsCount} />
+            <StatCard icon={TrendingUp} label={t("averageScore")} value={`${stats.averageScore}%`} />
+          </div>
+        </div>
       </div>
+
+      {scoredCourses.length > 0 && (
+        <div className="mt-6 rounded-sm border border-border bg-card p-5 shadow-sm">
+          <CourseScoreBars lang={lang} courses={scoredCourses} />
+        </div>
+      )}
 
       {completedCourses.length > 0 && (
         <div className="mt-6">
